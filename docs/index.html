@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payroll &amp; Employee Management System — SAP ABAP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#122036;
+    --navy-deep:#0b1626;
+    --paper:#F6F4EF;
+    --paper-panel:#FFFFFF;
+    --ink:#1C2530;
+    --ink-soft:#5A6472;
+    --blue:#1B6FA8;
+    --blue-deep:#0F5183;
+    --line:#DAD5C8;
+    --ok:#2F7D4F;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', -apple-system, sans-serif;
+    line-height:1.55;
+  }
+  .mono{font-family:'IBM Plex Mono', monospace;}
+  a{color:var(--blue-deep);}
+
+  header{
+    background:linear-gradient(180deg,var(--navy) 0%,var(--navy-deep) 100%);
+    color:#EDEFF2;
+    padding:64px 24px 56px;
+  }
+  .wrap{max-width:960px;margin:0 auto;}
+  .eyebrow-tag{
+    display:inline-block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13px;
+    color:#8FB8D6;
+    border:1px solid rgba(143,184,214,0.4);
+    padding:4px 10px;
+    border-radius:3px;
+    margin-bottom:22px;
+  }
+  h1{
+    font-size:clamp(30px,4.2vw,46px);
+    line-height:1.15;
+    margin:0 0 16px;
+    font-weight:700;
+    max-width:16ch;
+  }
+  .tagline{
+    font-size:18px;
+    color:#C7CEDA;
+    max-width:56ch;
+    margin:0 0 30px;
+  }
+  .badges{display:flex;flex-wrap:wrap;gap:8px;}
+  .badge{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;
+    background:rgba(255,255,255,0.07);
+    border:1px solid rgba(255,255,255,0.16);
+    color:#D7DCE4;
+    padding:5px 10px;
+    border-radius:3px;
+  }
+
+  nav{
+    background:var(--paper-panel);
+    border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:5;
+  }
+  nav .wrap{display:flex;gap:26px;padding:14px 24px;overflow-x:auto;}
+  nav a{
+    color:var(--ink-soft);
+    text-decoration:none;
+    font-size:14px;
+    font-weight:500;
+    white-space:nowrap;
+  }
+  nav a:hover{color:var(--blue-deep);}
+
+  section{padding:56px 24px;}
+  section h2{
+    font-size:24px;
+    margin:0 0 8px;
+    font-weight:700;
+    color:var(--navy);
+  }
+  .section-sub{color:var(--ink-soft);font-size:15px;margin:0 0 30px;max-width:60ch;}
+
+  #overview p{max-width:70ch;font-size:16px;}
+
+  .feature-list{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:0;
+    border-top:1px solid var(--line);
+  }
+  .feature{
+    padding:18px 4px;
+    border-bottom:1px solid var(--line);
+    border-right:1px solid var(--line);
+    padding-right:20px;
+  }
+  .feature:nth-child(2n){border-right:none;padding-left:20px;}
+  .feature h3{
+    font-size:15.5px;
+    margin:0 0 5px;
+    font-weight:600;
+  }
+  .feature p{margin:0;color:var(--ink-soft);font-size:14px;}
+
+  .arch{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13px;
+    background:var(--navy-deep);
+    color:#C9D3DE;
+    padding:26px 22px;
+    border-radius:4px;
+    overflow-x:auto;
+    line-height:1.75;
+    white-space:pre;
+  }
+  .arch .hi{color:#7FC1EA;}
+
+  table{width:100%;border-collapse:collapse;font-size:14px;}
+  th,td{
+    text-align:left;
+    padding:10px 12px;
+    border-bottom:1px solid var(--line);
+  }
+  th{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    letter-spacing:0.02em;
+    color:var(--ink-soft);
+    font-weight:500;
+  }
+  td.mono{font-family:'IBM Plex Mono',monospace;}
+
+  .steps{counter-reset:step;list-style:none;padding:0;margin:0;}
+  .steps li{
+    counter-increment:step;
+    display:flex;
+    gap:16px;
+    padding:16px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .steps li::before{
+    content:counter(step);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13px;
+    color:var(--blue-deep);
+    border:1px solid var(--blue-deep);
+    border-radius:50%;
+    width:26px;height:26px;
+    flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .steps b{display:block;font-size:15px;margin-bottom:3px;}
+  .steps span{color:var(--ink-soft);font-size:14px;}
+
+  footer{
+    background:var(--navy);
+    color:#B7C0CC;
+    padding:40px 24px;
+    font-size:14px;
+  }
+  footer a{color:#8FB8D6;}
+  .panel{background:var(--paper-panel);border:1px solid var(--line);border-radius:4px;padding:24px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <span class="eyebrow-tag">TCODE: ZPAYROLL</span>
+    <h1>Payroll &amp; Employee Management System</h1>
+    <p class="tagline">An end-to-end SAP ABAP project — from Data Dictionary tables to Module Pool
+      dialog screens, payroll processing, Smart Form payslips, and a set of
+      production-style extensions.</p>
+    <div class="badges">
+      <span class="badge">ABAP</span>
+      <span class="badge">Module Pool Programming</span>
+      <span class="badge">Open SQL</span>
+      <span class="badge">CDS Views</span>
+      <span class="badge">Smart Forms</span>
+      <span class="badge">OOABAP</span>
+      <span class="badge">ABAP Unit</span>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="wrap">
+    <a href="#overview">Overview</a>
+    <a href="#features">Features</a>
+    <a href="#architecture">Architecture</a>
+    <a href="#tables">Data Model</a>
+    <a href="#deploy">Deployment</a>
+  </div>
+</nav>
+
+<section id="overview">
+  <div class="wrap">
+    <h2>Overview</h2>
+    <p class="section-sub">What this project does and why it's built this way.</p>
+    <p>This project automates the core of payroll administration: maintaining employee
+      and salary records, running monthly payroll calculations, generating payslips,
+      and reporting on payroll history. It's built as a single connected system rather
+      than isolated exercises — the Data Dictionary tables feed the reports, the reports
+      feed the OOABAP business logic, and the Module Pool screens tie it all together
+      behind one custom transaction code.</p>
+  </div>
+</section>
+
+<section id="features" style="background:var(--paper-panel);border-top:1px solid var(--line);border-bottom:1px solid var(--line);">
+  <div class="wrap">
+    <h2>Features</h2>
+    <p class="section-sub">Core functionality plus a set of extensions that go beyond a typical training exercise.</p>
+    <div class="feature-list">
+      <div class="feature"><h3>Employee Management</h3><p>Add, display, update, and delete employee records through a dialog screen.</p></div>
+      <div class="feature"><h3>Salary Management</h3><p>Maintain salary components with a referential check against the employee master.</p></div>
+      <div class="feature"><h3>Payroll Processing</h3><p>Calculates Gross Pay and Net Pay for every active employee, with duplicate-run protection.</p></div>
+      <div class="feature"><h3>Payroll Reporting</h3><p>ALV report with department filters and a Net Pay totals row.</p></div>
+      <div class="feature"><h3>Payslip Generation</h3><p>Smart Form payslip per employee, runnable individually or as a scheduled batch job.</p></div>
+      <div class="feature"><h3>OOABAP Design</h3><p>Employee and Manager classes with inheritance and bonus calculation logic.</p></div>
+      <div class="feature"><h3>CDS View</h3><p>A reusable data model for reporting, ready for future OData/Fiori exposure.</p></div>
+      <div class="feature"><h3>Custom Exceptions</h3><p>A dedicated exception class hierarchy instead of scattered return-code checks.</p></div>
+      <div class="feature"><h3>BAdI Extension Point</h3><p>Bonus rules can be customized per department without touching core logic.</p></div>
+      <div class="feature"><h3>Automated Testing</h3><p>ABAP Unit tests covering the bonus calculation logic.</p></div>
+      <div class="feature"><h3>Authorization Object</h3><p>Restricts payroll data visibility by department.</p></div>
+      <div class="feature"><h3>System Integration</h3><p>An RFC-enabled function module exposing employee data to external systems.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="architecture">
+  <div class="wrap">
+    <h2>Architecture</h2>
+    <p class="section-sub">How the transaction code, screens, and background processes connect.</p>
+    <div class="arch">ZPAYROLL <span class="hi">(transaction code)</span>
+  └── ZPMS_MAIN_NAV, Screen 0100  <span class="hi">(main navigation)</span>
+        ├── Employee Management  → ZPMS_EMP tcode → CRUD dialog screen
+        ├── Salary Management    → ZPMS_SAL tcode → CRUD dialog screen
+        ├── Payroll Processing   → ZPMS_PAYROLL_PROCESS (batch calculation)
+        └── Payroll Report       → ZPMS_PAYROLL_RPT (ALV, totals row)
+
+Supporting layer
+  ├── ZCL_EMPLOYEE / ZCL_MANAGER      <span class="hi">(OOABAP business logic)</span>
+  ├── ZCDS_EMP_DISPLAY                <span class="hi">(CDS view)</span>
+  ├── ZCX_PAYROLL_EXCEPTION           <span class="hi">(error handling)</span>
+  ├── ZBADI_PAYROLL_BONUS             <span class="hi">(extensibility)</span>
+  ├── ZFM_GET_EMPLOYEE_DETAILS        <span class="hi">(RFC integration)</span>
+  └── ZSF_PAYSLIP                     <span class="hi">(Smart Form)</span></div>
+  </div>
+</section>
+
+<section id="tables" style="background:var(--paper-panel);border-top:1px solid var(--line);border-bottom:1px solid var(--line);">
+  <div class="wrap">
+    <h2>Data Model</h2>
+    <p class="section-sub">Core Data Dictionary tables.</p>
+    <table>
+      <thead><tr><th>Table</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">ZPMS_EMP_MST</td><td>Employee master data</td></tr>
+        <tr><td class="mono">ZPMS_SAL_MST</td><td>Salary master data — basic, HRA, DA, PF, tax</td></tr>
+        <tr><td class="mono">ZPMS_PAY_TRN</td><td>Payroll transaction history, one row per processed month</td></tr>
+        <tr><td class="mono">ZEMP_MASTER / ZDEPT_MASTER</td><td>Supporting master data for reporting &amp; OOABAP modules</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="deploy" style="background:var(--paper-panel);border-top:1px solid var(--line);">
+  <div class="wrap">
+    <h2>Deployment</h2>
+    <p class="section-sub">Build order inside an SAP system. Full detail in <span class="mono">README.md</span>.</p>
+    <ol class="steps">
+      <li><div><b>Data Dictionary tables (SE11)</b><span>Build and activate ZPMS_EMP_MST, ZPMS_SAL_MST, ZPMS_PAY_TRN, ZEMP_MASTER, ZDEPT_MASTER.</span></div></li>
+      <li><div><b>Sample data</b><span>Run the loader program once to populate test records.</span></div></li>
+      <li><div><b>Reports &amp; classes</b><span>Create each program via SE38 and each class via SE24, then activate.</span></div></li>
+      <li><div><b>Smart Form</b><span>Build ZSF_PAYSLIP in SMARTFORMS, then the driver program.</span></div></li>
+      <li><div><b>Module Pool screens</b><span>Build Screen 0100 for each program using Screen Painter (SE51) and Menu Painter (SE41).</span></div></li>
+      <li><div><b>Transaction code</b><span>Create ZPAYROLL in SE93, pointing to the main navigation program and screen.</span></div></li>
+      <li><div><b>Advanced objects</b><span>CDS view, exception class, BAdI, authorization object, and RFC function module.</span></div></li>
+      <li><div><b>Test</b><span>Run ABAP Unit tests, then walk through the manual test case log.</span></div></li>
+    </ol>
+    <p style="margin-top:24px;">Full GitHub push and GitHub Pages setup instructions are in github.
+      </p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Payroll &amp; Employee Management System — SAP ABAP project.</p>
+        <p>Source code: <a href="https://github.com/Avni-Shreya/sap-abap-payroll-project">github.com/Avni-Shreya/sap-abap-payroll-project</a></p>
+    
+  </div>
+</footer>
+
+</body>
+</html>
